@@ -1,0 +1,12 @@
+# Python 快取
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# 自動產生的備援音效(第一次執行會重建)
+meow.wav
+
+# 個人設定(每台電腦不同,放在使用者家目錄 ~/.eye_rest_config.json)
+.eye_rest_config.json
