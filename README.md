@@ -46,6 +46,15 @@ A cat that lives in your Mac menu bar and reminds you to rest your eyes, based o
 
 以後啟動:雙擊 `start.command`。
 
+## 更新到最新版
+
+雙擊 **`update.command`**:
+
+- 用 `git clone` 下載的 → 自動拉最新版並重啟
+- 用 ZIP 下載的 → 自動打開下載頁面,重新下載 ZIP 蓋回原資料夾(同一位置)即可
+
+你的設定不會遺失(存在 `~/.eye_rest_config.json`,與程式檔分開)。
+
 ## 換成自己的貓叫聲
 
 把任意音效檔命名為 `meow.mp3` 放進資料夾即可(蓋過預設的)。
@@ -63,6 +72,7 @@ A cat that lives in your Mac menu bar and reminds you to rest your eyes, based o
 | `break_overlay.py` | 全螢幕休息畫面 |
 | `install.command` | 一鍵安裝(裝套件 + 啟動) |
 | `start.command` | 之後的日常啟動 |
+| `update.command` | 一鍵更新到最新版 |
 | `meow.mp3` | 休息結束的貓叫聲(可自行替換) |
 
 ## 授權
