@@ -48,6 +48,12 @@ def main():
     s = STYLES.get(kind, STYLES["eye"])
 
     root = tk.Tk()
+    # 切成「配件模式」:不在 Dock 顯示圖示、也不出現在 Cmd-Tab 切換清單
+    try:
+        from AppKit import NSApplication
+        NSApplication.sharedApplication().setActivationPolicy_(1)  # 1 = Accessory
+    except Exception:
+        pass
     root.attributes("-fullscreen", True)
     root.attributes("-topmost", True)
     root.attributes("-alpha", 0.97)
