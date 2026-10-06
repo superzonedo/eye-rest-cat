@@ -12,7 +12,9 @@ for cand in \
     /usr/local/bin/python3 \
     "$(command -v python3)"; do
     [ -x "$cand" ] || continue
-    if "$cand" -c "import tkinter" >/dev/null 2>&1; then
+    # 跳過 Apple 內建的 Python(附的 Tk 8.5 太舊,休息畫面會空白;沒裝開發工具時還會跳安裝視窗)
+    case "$cand" in /usr/bin/*|/Library/Developer/*|/Applications/Xcode*) continue ;; esac
+    if "$cand" -c "import tkinter, sys; sys.exit(tkinter.TkVersion < 8.6)" >/dev/null 2>&1; then
         PY="$cand"
         break
     fi
@@ -20,7 +22,7 @@ done
 
 if [ -z "$PY" ]; then
     echo ""
-    echo "⚠️  找不到內含 tkinter 的 Python。"
+    echo "⚠️  找不到合適的 Python(需要 Tk 8.6 以上的 tkinter)。"
     echo "請到 python.org 下載安裝 Python(內建 tkinter),"
     echo "裝好後再雙擊一次這個『install.command』即可。"
     echo "(已幫你打開下載頁面)"
