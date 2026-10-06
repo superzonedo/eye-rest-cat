@@ -54,12 +54,22 @@ def main():
         NSApplication.sharedApplication().setActivationPolicy_(1)  # 1 = Accessory
     except Exception:
         pass
+
+    def activate():
+        # 配件模式的 app 不會自動變成前景,視窗沒拿到焦點時
+        # 第一下點擊只會「啟用視窗」而不會按到按鈕 → 主動把自己拉到前景
+        try:
+            from AppKit import NSApplication
+            NSApplication.sharedApplication().activateIgnoringOtherApps_(True)
+        except Exception:
+            pass
+        root.lift()
+        root.focus_force()
     root.attributes("-fullscreen", True)
     root.attributes("-topmost", True)
     root.attributes("-alpha", 0.97)
     root.configure(bg=s["bg"])
-    root.lift()
-    root.focus_force()
+    activate()
 
     big = tkfont.Font(family="Helvetica Neue", size=140, weight="normal")
     cat = tkfont.Font(family="Menlo", size=64, weight="normal")  # 等寬字讓貓臉工整
@@ -86,13 +96,16 @@ def main():
         sys.exit(code)
 
     if allow_skip:
-        skip = tk.Button(
+        # 用 Label 綁點擊,而不是 macOS 原生的 tk.Button:
+        # 原生按鈕在視窗未取得焦點時會吃掉第一下點擊
+        skip = tk.Label(
             root, text="略過這次喵", font=small, fg=s["sub"], bg=s["bg"],
-            activebackground=s["bg"], activeforeground=s["fg"],
-            highlightthickness=0, bd=0, relief="flat", cursor="pointinghand",
-            command=lambda: finish(2),
+            padx=16, pady=10, cursor="pointinghand",
         )
         skip.place(relx=0.94, rely=0.94, anchor="se")
+        skip.bind("<Button-1>", lambda e: finish(2))
+        skip.bind("<Enter>", lambda e: skip.config(fg=s["fg"]))
+        skip.bind("<Leave>", lambda e: skip.config(fg=s["sub"]))
 
     # Esc 永遠可以強制關閉(避免卡住),視同略過
     root.bind("<Escape>", lambda e: finish(2))
@@ -108,6 +121,9 @@ def main():
         root.after(1000, tick)
 
     root.after(1000, tick)
+    # 全螢幕動畫完成後再搶一次焦點,確保按鈕與 Esc 第一下就有反應
+    root.after(300, activate)
+    root.after(1000, activate)
     root.mainloop()
 
 
